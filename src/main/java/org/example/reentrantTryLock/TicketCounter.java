@@ -14,6 +14,12 @@ public class TicketCounter {
         // Try to acquire the lock within 1 second
         if(lock.tryLock(4000, TimeUnit.MILLISECONDS)) {
             try {
+//                getHoldCount() tells how many times the current thread has acquired the lock, not how many times a user booked.
+//                Let’s assume a method outerBooking() locks the ticket counter, and it internally calls another method
+//                innerBooking() which also locks it again (same thread, nested acquisition).
+                System.out.println("Lock hold count: " + lock.getHoldCount());
+                System.out.println("Is held by current thread? " + lock.isHeldByCurrentThread());
+                System.out.println("Queue length (estimate): " + lock.getQueueLength());
                 if (ticketsAvailable > 0 && !bookedUsers.contains(user)) {
                     System.out.println(user + " is booking a ticket");
                     Thread.sleep(500);
