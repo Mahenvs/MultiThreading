@@ -2,18 +2,25 @@ package org.example.reentrantlock_sync;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TicketBookingApp {
     public static void main(String[] args) throws InterruptedException {
         TicketCounter counter = new TicketCounter();
         String[] users = {"mahe", "manish", "Priya", "Aarohi", "Abhigna", "Ankitha", "venu", "sai", "vam", "mahi"};
 
+        Random random = new Random();
         List<Thread> threads = new ArrayList<>();
-        for (String user : users) {
+        for (int i = 0; i < 20; i++) {
+            String user = users[random.nextInt(users.length)];
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    counter.bookTicket(user);
+                    if(random.nextDouble() < 0.7) {
+                        counter.bookTicket(user);
+                    }else{
+                        counter.cancelTicket(user);
+                    }
                 }
             });
             t.start();
