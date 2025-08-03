@@ -26,7 +26,8 @@ public class TicketCounter {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }finally {
-            lock.unlock();//Always release lock
+//            when we forgot to release the lock, can lead to deadlock or starvation
+//            lock.unlock();//Always release lock
         }
     }
 
