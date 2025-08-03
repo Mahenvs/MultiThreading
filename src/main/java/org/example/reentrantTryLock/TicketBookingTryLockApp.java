@@ -16,10 +16,14 @@ public class TicketBookingTryLockApp {
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(random.nextDouble() < 0.7) {
-                        counter.bookTicket(user);
-                    }else{
+                    try {
+                        if(random.nextDouble() < 0.7) {
+                            counter.bookTicket(user);
+                        }else{
                         counter.cancelTicket(user);
+                    }
+                }catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             });

@@ -2,6 +2,7 @@ package org.example.reentrantTryLock;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TicketCounter {
@@ -9,9 +10,9 @@ public class TicketCounter {
     private final ReentrantLock lock = new ReentrantLock();
     private final Set<String> bookedUsers = new HashSet<>();
 
-    public void bookTicket(String user){
+    public void bookTicket(String user) throws InterruptedException {
         // Try to acquire the lock within 1 second
-        if(lock.tryLock()) {
+        if(lock.tryLock(4000, TimeUnit.MILLISECONDS)) {
             try {
                 if (ticketsAvailable > 0 && !bookedUsers.contains(user)) {
                     System.out.println(user + " is booking a ticket");
@@ -24,7 +25,7 @@ public class TicketCounter {
                 } else {
                     System.out.println("Tickets are not available for user " + user);
                 }
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } finally {
 //            when we forgot to release the lock, can lead to deadlock or starvation
@@ -36,9 +37,9 @@ public class TicketCounter {
         }
     }
 
-    public int cancelTicket(String user){
+    public int cancelTicket(String user) throws InterruptedException {
         // Try to acquire the lock within 1 second
-        if(lock.tryLock()) {
+        if(lock.tryLock(4000,TimeUnit.MILLISECONDS)) {
             try {
                 if (bookedUsers.contains(user)) {
                     ticketsAvailable += 1;
@@ -46,8 +47,6 @@ public class TicketCounter {
                 } else {
                     System.out.println(user + " don't have a ticket Nothing to cancel. ");
                 }
-            } catch (Exception e) {
-
             } finally {
                 lock.unlock();
             }
