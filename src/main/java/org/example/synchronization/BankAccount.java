@@ -1,4 +1,4 @@
-package org.example;
+package org.example.synchronization;
 
 public class BankAccount {
     private String AccountNumber;
@@ -37,7 +37,6 @@ public class BankAccount {
                 toAccount.deposit(amount);
             }
         }
-
     }
 
 }
